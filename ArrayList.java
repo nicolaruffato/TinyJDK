@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(int index, T e) {
         resize();
-        if(index < 0 || index > size) {
+        if(index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         else {
@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if(index < 0 || index > size) {
+        if(index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         else {
@@ -41,7 +41,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if(index < 0 || index > size) {
+        if(index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         else {
@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T set(int index, T e) {
-        if(index < 0 || index > size) {
+        if(index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
         else {
