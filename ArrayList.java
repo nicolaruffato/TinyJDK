@@ -1,4 +1,4 @@
-public class ArrayList<T> implements Iterable<T>, Collection<T>, List<T> {
+public class ArrayList<T> implements List<T> {
 
     private T[] data;
     private int size;
@@ -109,7 +109,7 @@ public class ArrayList<T> implements Iterable<T>, Collection<T>, List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
+        return new Iterator<>() {
             private int currentIndex = 0;
 
             @Override
