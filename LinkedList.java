@@ -38,7 +38,8 @@ public class LinkedList<T> implements List<T> {
             }
         }
         else if(index == size - 1) {
-            tail.next = new Node<>(e, tail, null);
+            tail.prev = new Node<>(e, tail.prev, tail);
+            tail.prev.prev.next = tail.prev;
         }
         else {
             Node<T> tmp = head;
@@ -54,22 +55,82 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        if(index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        else {
+            Node<T> tmp = head;
+            while(index > 0) {
+                tmp = tmp.next;
+                index--;
+            }
+            return tmp.element;
+        }
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        T ret;
+        if(index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        else if(index == 0){
+            ret = head.element;
+            if(size == 1) {
+                head = tail = null;
+            }
+            else {
+                head = head.next;
+                head.prev = null;
+            }
+        }
+        else if(index == size-1) {
+            ret = tail.element;
+            tail = tail.prev;
+            tail.next = null;
+        }
+        else {
+            Node<T> tmp = head;
+            while(index-1 > 0) {
+                tmp = tmp.next;
+                index--;
+            }
+            ret = tmp.next.element;
+            tmp.next = tmp.next.next;
+            tmp.next.prev = tmp;
+        }
+        size--;
+        return ret;
     }
 
     @Override
     public T set(int index, T e) {
-        return null;
+        if(index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        else {
+            Node<T> tmp = head;
+            while(index > 0) {
+                tmp = tmp.next;
+                index--;
+            }
+            T ret = tmp.element;
+            tmp.element = e;
+            return ret;
+        }
     }
 
     @Override
     public boolean add(T e) {
-        return false;
+        if(head == null) {
+            head = tail = new Node<>(e, null, null);
+        }
+        else {
+            tail = new Node<>(e, tail, null);
+            tail.prev.next = tail;
+        }
+        size++;
+        return true;
     }
 
     @Override
@@ -92,6 +153,16 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public boolean remove(T e) {
+        int indx = 0;
+        Node<T> tmp = head;
+        while(indx < size) {
+            if(tmp.element == e) {
+                remove(indx);
+                return true;
+            }
+            indx++;
+            tmp = tmp.next;
+        }
         return false;
     }
 
@@ -102,7 +173,22 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new Iterator<>() {
+
+            private Node<T> current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+                T ret = current.element;
+                current = current.next;
+                return ret;
+            }
+        };
     }
 
 
