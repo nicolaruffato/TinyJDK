@@ -1,3 +1,5 @@
+package Collection;
+
 public class LinkedList<T> implements List<T> {
 
     protected static class Node<E> {

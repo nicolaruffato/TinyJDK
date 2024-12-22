@@ -1,3 +1,5 @@
+package Collection;
+
 public interface Collection<T> {
 
     boolean add(T e);

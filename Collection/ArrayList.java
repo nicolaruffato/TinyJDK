@@ -1,3 +1,5 @@
+package Collection;
+
 public class ArrayList<T> implements List<T> {
 
     private T[] data;
