@@ -175,7 +175,7 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<>() {
+        return new Iterator<T>() {
 
             private Node<T> current = head;
 

@@ -2,9 +2,7 @@ package Map;
 
 import com.sun.source.tree.Tree;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, V> {
 
@@ -88,19 +86,54 @@ public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, 
         return treeSearch(root, key) != null;
     }
 
+
+    private boolean containsValueHelper(TreeNode<K, V> node, V value) {
+        if(node == null) {
+            return false;
+        }
+        return containsValueHelper(node.getLeft(), value) || node.getValue().equals(value)
+                || containsValueHelper(node.getRight(), value);
+    }
+
     @Override
     public boolean containsValue(V value) {
-        return false;
+        return containsValueHelper(root, value);
+    }
+
+    private void entrySetHelper(TreeNode<K, V> node, Set<Entry<K, V>> result) {
+        if(node == null) {
+            return;
+        }
+        else {
+            entrySetHelper(node.getLeft(), result);
+            result.add(node);
+            entrySetHelper(node.getRight(), result);
+        }
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return Set.of();
+        Set<Entry<K, V>> ret = new HashSet<>();
+        entrySetHelper(root, ret);
+        return ret;
+    }
+
+    private void keySetHelper(TreeNode<K, V> node, Set<K> result) {
+        if(node == null) {
+            return;
+        }
+        else {
+            keySetHelper(node.getLeft(), result);
+            result.add(node.getKey());
+            keySetHelper(node.getRight(), result);
+        }
     }
 
     @Override
     public Set<K> keySet() {
-        return Set.of();
+        Set<K> ret = new HashSet<>();
+        keySetHelper(root, ret);
+        return ret;
     }
 
     @Override
@@ -146,7 +179,13 @@ public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, 
 
     @Override
     public V put(K key, V value) {
-        return treeInsert(root, key, value);
+        if(root == null) {
+            root = new TreeNode<K, V>(key, value);
+            return value;
+        }
+        else {
+            return treeInsert(root, key, value);
+        }
     }
 
     private void transplant(TreeNode<K, V> a, TreeNode<K, V> b) {
@@ -174,10 +213,7 @@ public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, 
     //sistemare -> aggiungere ref a root nella firma in modo da poter concentrare la rimozione
     // in qualsiasi sottoalbero
     private V treeDelete(TreeNode<K, V> node) {
-        if(node.getRight() == null && node.getLeft() == null) {
-            transplant(node, null);
-        }
-        else if(node.getRight() == null) {
+        if(node.getRight() == null) {
             transplant(node, node.getLeft());
         }
         else if(node.getLeft() == null) {
@@ -185,10 +221,14 @@ public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, 
         }
         else {
             TreeNode<K, V> min = treeMin(node.getRight());
-            V tmp = min.getValue();
-            min.setValue(node.getValue());
-            node.setValue(tmp);
-            return treeDelete(min);
+            if(!min.getParent().equals(node)) {
+                transplant(min, min.getRight());
+                min.setRight(node.getRight());
+                min.getRight().setParent(min);
+            }
+            transplant(node, min);
+            min.setLeft(node.getLeft());
+            min.getLeft().setParent(min);
         }
         return node.getValue();
     }
@@ -216,8 +256,38 @@ public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, 
         }
     }
 
+    private void valuesHelper(TreeNode<K, V> node, Collection<V> result) {
+        if(node == null) {
+            return;
+        }
+        else {
+            valuesHelper(node.getLeft(), result);
+            result.add(node.getValue());
+            valuesHelper(node.getRight(), result);
+        }
+    }
+
     @Override
     public Collection<V> values() {
-        return List.of();
+        Collection<V> ret = new ArrayList<>();
+        valuesHelper(root, ret);
+        return ret;
     }
+
+    /////////////////////////////////////////
+
+    private void printOrderRec(TreeNode<K, V> n) {
+        if(n != null) {
+            printOrderRec(n.getLeft());
+            System.out.println(n.getValue());
+            printOrderRec(n.getRight());
+        }
+    }
+
+    public void printOrder() {
+        printOrderRec(root);
+    }
+
+
+
 }

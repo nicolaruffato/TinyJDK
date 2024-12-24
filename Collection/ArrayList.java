@@ -1,5 +1,6 @@
 package Collection;
 
+
 public class ArrayList<T> implements List<T> {
 
     private T[] data;
@@ -111,7 +112,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<>() {
+        return new Iterator<T>() {
             private int currentIndex = 0;
 
             @Override
