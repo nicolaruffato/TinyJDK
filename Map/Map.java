@@ -1,6 +1,6 @@
 package Map;
 
-import java.util.Collection;
+import Collection.Collection;
 import java.util.Set;
 
 public interface Map<K, V> {

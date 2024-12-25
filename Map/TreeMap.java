@@ -1,8 +1,11 @@
 package Map;
 
-import com.sun.source.tree.Tree;
 
-import java.util.*;
+
+import Collection.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, V> {
 
@@ -269,7 +272,7 @@ public class TreeMap<K extends Comparable<? super K>, V> extends AbstractMap<K, 
 
     @Override
     public Collection<V> values() {
-        Collection<V> ret = new ArrayList<>();
+        Collection<V> ret = new ArrayList<V>();
         valuesHelper(root, ret);
         return ret;
     }
